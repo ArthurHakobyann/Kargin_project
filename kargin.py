@@ -54,7 +54,8 @@ def help(update, context):
 def echo(update, context):
     global tek
     if tek==1:
-      r=requests.get('http://192.168.8.156:509/')
+      r = requests.post(url="http://192.168.8.156:509/api", 
+      json={'text': update.message.text, 'filters':{'Վայր':'Տուն'}})
       update.message.reply_text(r.json()['url'])
       tek=0
     if update.message.text == "դու փիղ ես":
