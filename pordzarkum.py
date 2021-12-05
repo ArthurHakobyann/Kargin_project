@@ -9,12 +9,16 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 logger = logging.getLogger(__name__)
 tek=0
 state_name = ["Տեքստ","Լուսավորություն","Դերասաններ","Վայր"]
-state = [None,None,None,None]
+state = ["","","",""]
+derasanner = ['Հայկո',"Մկո","Անդո","Երեխա"]
+vayrer = ["տուն","հիվանդանոց","դուրս","ննջասենյակ","բանտ","գժանոց"]
 updater = Updater("2115330440:AAHufJG8fmYXzukBmEtaF102WioPkcVgJFs", use_context=True)
 j =updater.job_queue
 def start(update, context):
+    global state
     bot = telegram.Bot(token="2115330440:AAHufJG8fmYXzukBmEtaF102WioPkcVgJFs")
     #bot.send_message(813402616,update.message.chat_id)
+    state = ["","","",""]
     user = update.message.from_user
     update.message.reply_text("Սկսենք",reply_markup=main_menu())
 
@@ -33,11 +37,11 @@ def main_menu():
     return InlineKeyboardMarkup(keyboard)
 def choose():
     keyboard = [[
-          InlineKeyboardButton("Տեքստ", callback_data='te'),
-          InlineKeyboardButton("Դերասաններ", callback_data='de')],
-          [InlineKeyboardButton("Լուսավորություն", callback_data='svet'),
-          InlineKeyboardButton("Վայր", callback_data='va')],
-          [InlineKeyboardButton("Փնտրել", callback_data='search')]]
+          InlineKeyboardButton("Տեքստ 📃", callback_data='te'),
+          InlineKeyboardButton("Դերասաններ 👫🏻", callback_data='de')],
+          [InlineKeyboardButton("Լուսավորություն 💡", callback_data='svet'),
+          InlineKeyboardButton("Վայր 🏡", callback_data='vayr')],
+          [InlineKeyboardButton("Փնտրել 🔎", callback_data='search')]]
     
     return InlineKeyboardMarkup(keyboard)
 def inter():
@@ -46,9 +50,20 @@ def inter():
           InlineKeyboardButton("Ամենակարճ", callback_data='karch')],
           [InlineKeyboardButton("Ամենահին", callback_data='hin'),
           InlineKeyboardButton("Ամենանոր", callback_data='nor')],
-          [InlineKeyboardButton("Ամենահավանված", callback_data='like'),
+          [InlineKeyboardButton("Ամենահավանված", callback_data='havanel'),
           InlineKeyboardButton("Ամենամեկնաբանված", callback_data='comment')]]
     
+  return InlineKeyboardMarkup(keyboard)
+
+def vayr():
+  keyboard = [[InlineKeyboardButton(i, callback_data=f'vayr-{i}'),
+          InlineKeyboardButton(j, callback_data=f'vayr-{j}')] for i,j in zip(vayrer[::2],vayrer[1::2])]
+  return InlineKeyboardMarkup(keyboard)
+
+def derasan():
+  keyboard = [[InlineKeyboardButton(i, callback_data=f'der-{i}'),
+          InlineKeyboardButton(j, callback_data=f'der-{j}')] for i,j in zip(derasanner[::2],derasanner[1::2])]
+  keyboard.append([InlineKeyboardButton("վերջ", callback_data='back')])
   return InlineKeyboardMarkup(keyboard)
 def luys():
   keyboard = [[
@@ -80,7 +95,7 @@ def echo(update, context):
 
 def button(update, context):
     """Parses the CallbackQuery and updates the message text."""
-    global lusaworutyun
+    global lusaworutyun,state
     query = update.callback_query
     query.answer()
     if query.data=='1':
@@ -100,7 +115,21 @@ def button(update, context):
     elif query.data[0]=='l':
       state[1] = query.data[1:]
       print_state(query,choose)
+    elif query.data=="vayr":
+      print_state(query,vayr)
+    elif query.data=="de":
+      print_state(query,derasan)
+    elif query.data=="back":
+      print_state(query,choose)
+    elif "vayr" in query.data:
+      state[3] = query.data[5:]
+      print_state(query,choose)
+    elif "der" in query.data:
+      if not (query.data[4:] in state[2]):
+        state[2]+=query.data[4:]+"  "
+      print_state(query,derasan)
     elif query.data=='search':
+      state = ["","","",""]
       query.edit_message_text("ֆունկցիան դեռ չի աշխատում",reply_markup=main_menu())
       #j.run_once(query.edit_message_text("Տղեք , կատակ էի անում , հետ էկեք "),100)
 
