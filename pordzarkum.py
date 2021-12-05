@@ -127,6 +127,8 @@ def button(update, context):
     elif "der" in query.data:
       if not (query.data[4:] in state[2]):
         state[2]+=query.data[4:]+"  "
+      else:
+        state[2] = state[2].replace(query.data[4:]+"  ", '')
       print_state(query,derasan)
     elif query.data=='search':
       state = ["","","",""]
