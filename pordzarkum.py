@@ -10,6 +10,8 @@ logger = logging.getLogger(__name__)
 tek=0
 state_name = ["Տեքստ","Լուսավորություն","Դերասաններ","Վայր"]
 state = [None,None,None,None]
+updater = Updater("2115330440:AAHufJG8fmYXzukBmEtaF102WioPkcVgJFs", use_context=True)
+j =updater.job_queue
 def start(update, context):
     bot = telegram.Bot(token="2115330440:AAHufJG8fmYXzukBmEtaF102WioPkcVgJFs")
     #bot.send_message(813402616,update.message.chat_id)
@@ -33,8 +35,9 @@ def choose():
     keyboard = [[
           InlineKeyboardButton("Տեքստ", callback_data='te'),
           InlineKeyboardButton("Դերասաններ", callback_data='de')],
-          [InlineKeyboardButton("Լուսավորություն", callback_data='lu'),
-          InlineKeyboardButton("Վայր", callback_data='va')]]
+          [InlineKeyboardButton("Լուսավորություն", callback_data='svet'),
+          InlineKeyboardButton("Վայր", callback_data='va')],
+          [InlineKeyboardButton("Փնտրել", callback_data='search')]]
     
     return InlineKeyboardMarkup(keyboard)
 def inter():
@@ -49,10 +52,10 @@ def inter():
   return InlineKeyboardMarkup(keyboard)
 def luys():
   keyboard = [[
-          InlineKeyboardButton("լուսավոր", callback_data='l'),
-          InlineKeyboardButton("մութ", callback_data='m')],
-          [InlineKeyboardButton("մութ -> լուսավոր", callback_data='ml'),
-          InlineKeyboardButton("լուսավոր -> մութ", callback_data='lm')]]
+          InlineKeyboardButton("լուսավոր", callback_data='lԼուսավոր'),
+          InlineKeyboardButton("մութ", callback_data='lմութ')],
+          [InlineKeyboardButton("մութ -> լուսավոր", callback_data='lմութ -> լուսավոր'),
+          InlineKeyboardButton("լուսավոր -> մութ", callback_data='lլուսավոր -> մութ')]]
     
   return InlineKeyboardMarkup(keyboard)
 def help(update, context):
@@ -90,48 +93,32 @@ def button(update, context):
       global tek
       query.edit_message_text("Գրեք ձեր հիշած հատվածը")
       tek=1
-    elif query.data=='lu':
+    elif query.data=='svet':
       print_state(query,luys)
     elif query.data=='3':
       print_state(query,inter)
-    elif query.data=='l':
-      state[1] = 'Լուսավոր'
+    elif query.data[0]=='l':
+      state[1] = query.data[1:]
       print_state(query,choose)
-    elif query.data=='m':
-      state[1] = 'մութ'
-      print_state(query,choose)
-    elif query.data=='ml':
-      state[1] = 'մութ -> լուսավոր'
-      print_state(query,choose)
-    elif query.data=='lm':
-      state[1] = 'լուսավոր -> մութ'
-      print_state(query,choose)
+    elif query.data=='search':
+      query.edit_message_text("ֆունկցիան դեռ չի աշխատում",reply_markup=main_menu())
+      #j.run_once(query.edit_message_text("Տղեք , կատակ էի անում , հետ էկեք "),100)
 
 def error(update,context):
     """Log Errors caused by Updates."""
     logger.warning('Update "%s" caused error "%s"', update, context.error)
 
 def main():
-    updater = Updater("2115330440:AAHufJG8fmYXzukBmEtaF102WioPkcVgJFs", use_context=True)
+
     #bot = telegram.Bot(token="2115330440:AAHufJG8fmYXzukBmEtaF102WioPkcVgJFs")
-    # Get the dispatcher to register handlers
     dp = updater.dispatcher
-    # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CallbackQueryHandler(button))
     dp.add_handler(CommandHandler("help", help))
-    # on noncommand i.e message - echo the message on Telegram
     dp.add_handler(MessageHandler(Filters.text, echo))
-    # log all errors
     dp.add_error_handler(error)
-    # Start the Bot
     updater.start_polling()
-
-    # Run the bot until you press Ctrl-C or the process receives SIGINT,
-    # SIGTERM or SIGABRT. This should be used most of the time, since
-    # start_polling() is non-blocking and will stop the bot gracefully.
     updater.idle()
-
 
 if __name__ == '__main__':
     main()
