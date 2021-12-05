@@ -1,4 +1,4 @@
-import logging
+"""import logging
 import telegram
 import requests
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update,ReplyKeyboardMarkup
@@ -124,3 +124,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+"""
