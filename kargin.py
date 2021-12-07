@@ -48,7 +48,6 @@ def luys():
     
   return InlineKeyboardMarkup(keyboard)
 def help(update, context):
-    """Send a message when the command /help is issued."""
     update.message.reply_text('Help!')
 
 def echo(update, context):
@@ -65,7 +64,6 @@ def echo(update, context):
         #update.message.reply_text("https://www.youtube.com/watch?v=cfOEjPZk6FA")
 
 def button(update, context):
-    """Parses the CallbackQuery and updates the message text."""
     global lusaworutyun
     query = update.callback_query
     query.answer()
@@ -97,7 +95,6 @@ def button(update, context):
       query.edit_message_text(f"lusaworutyun -> {lusaworutyun}",reply_markup=choose())
 
 def error(update,context):
-    """Log Errors caused by Updates."""
     logger.warning('Update "%s" caused error "%s"', update, context.error)
 
 def main():
