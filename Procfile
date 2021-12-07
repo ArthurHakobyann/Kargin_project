@@ -1,1 +1,1 @@
-web: python3 pordzarkum.py
+web: python3 deploy.py
