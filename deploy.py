@@ -7,6 +7,7 @@ import os
 PORT = int(os.environ.get('PORT', 5000))
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
+bot = telegram.Bot(token="2115330440:AAHufJG8fmYXzukBmEtaF102WioPkcVgJFs")
 TOKEN='2115330440:AAHufJG8fmYXzukBmEtaF102WioPkcVgJFs'
 logger = logging.getLogger(__name__)
 tek = 0
