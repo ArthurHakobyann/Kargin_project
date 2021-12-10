@@ -172,8 +172,7 @@ def main():
     dp.add_error_handler(error)
     updater.start_webhook(listen="0.0.0.0",
                           port=int(PORT),
-                          url_path=TOKEN)
-    updater.bot.setWebhook('https://stark-gorge-47699.herokuapp.com/' + TOKEN)
+                          url_path=TOKEN, webhook_url='https://stark-gorge-47699.herokuapp.com/' + TOKEN)
     updater.idle()
 
 
